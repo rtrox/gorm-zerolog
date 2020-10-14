@@ -39,7 +39,27 @@ func (l Logger) Trace(ctx context.Context, begin time.Time, f func() (string, in
 		event = zl.Trace()
 	}
 
-	event.Dur("elapsed", time.Since(begin))
+	var dur_key string
+
+	switch zerolog.DurationFieldUnit {
+		case time.Nanosecond:
+			dur_key = "elapsed_ns"
+		case time.Microsecond:
+			dur_key = "elapsed_us"
+		case time.Millisecond:
+			dur_key = "elapsed_ms"
+		case time.Second:
+			dur_key = "elapsed"
+		case time.Minute:
+			dur_key = "elapsed_min"
+		case time.Hour:
+			dur_key = "elapsed_hr"
+		default:
+			zl.Error().Interface("zerolog.DurationFieldUnit", zerolog.DurationFieldUnit).Msg("gormzerolog encountered a mysterious, unknown value for DurationFieldUnit")
+			dur_key = "elapsed_"
+		}
+
+	event.Dur(dur_key, time.Since(begin))
 
 	sql, rows := f()
 	event.Str("sql", sql)
