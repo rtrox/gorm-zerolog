@@ -62,7 +62,9 @@ func (l Logger) Trace(ctx context.Context, begin time.Time, f func() (string, in
 	event.Dur(dur_key, time.Since(begin))
 
 	sql, rows := f()
-	event.Str("sql", sql)
+	if sql != "" {
+		event.Str("sql", sql)
+	}
 	if rows > -1 {
 		event.Int64("rows", rows)
 	}
