@@ -1,4 +1,4 @@
-module github.com/mpalmer/gorm-zerolog
+module github.com/rtrox/gormzerolog
 
 go 1.15
 
